@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Магазин електроніки</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-modal" id="authModal">
+            <div class="auth-header">
+                <span class="auth-logo">⚡ TechStore</span>
+            </div>
+            
+            <div class="auth-form" id="loginForm">
+                <h2 id="loginTitle">🔐 Вхід</h2>
+                <div class="form-group">
+                    <label id="loginEmailLabel">Email</label>
+                    <input type="email" id="loginEmail" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label id="loginPasswordLabel">Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <div class="auth-error hidden" id="loginError"></div>
+                <button class="auth-btn" id="loginBtn">Увійти</button>
+                <p class="auth-switch" id="switchToRegister">
+                    Немає акаунту? <span>Зареєструватися</span>
+                </p>
+            </div>
+            
+            <div class="auth-form hidden" id="registerForm">
+                <h2 id="registerTitle">📝 Реєстрація</h2>
+                <div class="form-group">
+                    <label id="registerNameLabel">Ім'я</label>
+                    <input type="text" id="registerName" placeholder="Ваше ім'я" required>
+                </div>
+                <div class="form-group">
+                    <label id="registerEmailLabel">Email</label>
+                    <input type="email" id="registerEmail" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label id="registerPasswordLabel">Пароль</label>
+                    <input type="password" id="registerPassword" placeholder="Мінімум 6 символів" required>
+                </div>
+                <div class="form-group">
+                    <label id="registerConfirmLabel">Підтвердити пароль</label>
+                    <input type="password" id="registerConfirm" placeholder="••••••••" required>
+                </div>
+                <div class="auth-error hidden" id="registerError"></div>
+                <button class="auth-btn" id="registerBtn">Зареєструватися</button>
+                <p class="auth-switch" id="switchToLogin">
+                    Вже є акаунт? <span>Увійти</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">TechStore</span>
+            </a>
+            
+            <div class="header-controls">
+                <div class="user-info" id="userInfo">
+                    <span class="user-icon">👤</span>
+                    <span class="user-name" id="userName"></span>
+                    <button class="logout-btn" id="logoutBtn" title="Вийти">🚪</button>
+                </div>
+
+                <button class="history-btn" id="historyBtn" title="📜 Історія покупок">📜</button>
+                
+                <button class="code-btn" id="codeBtn" title="🎟️ Введіть код">🎟️</button>
+                
+                <div class="switcher">
+                    <button class="theme-btn" data-theme="light" title="☀️ Light Theme">☀️</button>
+                    <button class="theme-btn" data-theme="dark" title="🌙 Dark Theme">🌙</button>
+                    <button class="theme-btn" data-theme="equalizer" title="🎛️ Equalizer Theme">🎛️</button>
+                </div>
+                
+                <div class="switcher">
+                    <button class="lang-btn active" data-lang="uk">🇺🇦 UA</button>
+                    <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+                    <button class="lang-btn" data-lang="pl">🇵🇱 PL</button>
+                </div>
+                
+                <div class="switcher">
+                    <button class="currency-btn active" data-currency="UAH">₴</button>
+                    <button class="currency-btn" data-currency="USD">$</button>
+                    <button class="currency-btn" data-currency="PLN">zł</button>
+                </div>
+                
+                <button class="cart-btn" id="cartBtn">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="search-section">
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Пошук техніки...">
+                <span class="search-icon">🔍</span>
+            </div>
+        </section>
+
+        <section class="products-section" id="recommendedSection">
+            <h2 class="section-title" id="recommendedTitle">⭐ Рекомендовані товари</h2>
+            <div class="products-grid" id="recommendedGrid"></div>
+        </section>
+
+        <section class="products-section hidden" id="searchSection">
+            <h2 class="section-title" id="searchResultsTitle">🔍 Результати пошуку</h2>
+            <div class="products-grid" id="searchGrid"></div>
+            <div class="no-results hidden" id="noResults">
+                <span class="no-results-icon">😕</span>
+                <p id="noResultsText">Нічого не знайдено</p>
+            </div>
+        </section>
+    </main>
+
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <aside class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2 id="cartTitle">🛒 Кошик</h2>
+            <button class="close-btn" id="closeCart">×</button>
+        </div>
+        <div class="cart-body">
+            <div class="cart-empty" id="cartEmpty">
+                <span class="cart-empty-icon">🛒</span>
+                <p id="cartEmptyText">Кошик порожній</p>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span id="totalLabel">Разом:</span>
+                <span class="total-price" id="totalPrice">₴0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn" disabled>Оформити замовлення</button>
+        </div>
+    </aside>
+
+    <div class="modal" id="productModal">
+        <div class="modal-content product-modal-content">
+            <button class="close-modal-btn" id="closeProductModal">×</button>
+            <div class="product-modal-body">
+                <div class="product-modal-image">
+                    <img id="modalProductImage" src="" alt="">
+                </div>
+                <div class="product-modal-info">
+                    <span class="product-modal-category" id="modalProductCategory"></span>
+                    <h2 class="product-modal-title" id="modalProductTitle"></h2>
+                    <p class="product-modal-description" id="modalProductDescription"></p>
+                    <div class="product-stock" id="modalProductStock"></div>
+                    <div class="product-modal-footer">
+                        <span class="product-modal-price" id="modalProductPrice"></span>
+                        <button class="add-to-cart-btn large" id="modalAddToCart">🛒 Додати в кошик</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content checkout-modal-content">
+            <button class="close-modal-btn" id="closeCheckoutModal">×</button>
+            <h2 class="checkout-title" id="checkoutTitle">📦 Оформлення замовлення</h2>
+            <form id="checkoutForm">
+                <div class="form-section">
+                    <h3 id="deliveryInfoLabel">📍 Інформація про доставку</h3>
+                    <div class="form-group">
+                        <label id="nameLabel">Ім'я</label>
+                        <input type="text" id="nameInput" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="phoneLabel">Телефон</label>
+                        <input type="tel" id="phoneInput" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="addressLabel">Адреса доставки</label>
+                        <textarea id="addressInput" rows="3" required></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 id="paymentMethodLabel">💳 Спосіб оплати</h3>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="card" checked>
+                            <span class="payment-label" id="cardPaymentLabel">💳 Карткою онлайн</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="cash">
+                            <span class="payment-label" id="cashPaymentLabel">💵 Готівкою при отриманні</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 id="orderSummaryLabel">📋 Ваше замовлення</h3>
+                    <div class="order-summary" id="orderItems"></div>
+                    <div class="order-total">
+                        <span id="totalToPayLabel">До сплати:</span>
+                        <span class="order-total-price" id="orderTotal">₴0</span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="place-order-btn" id="placeOrderBtn">✓ Оформити замовлення</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="successModal">
+        <div class="modal-content success-modal-content">
+            <button class="close-modal-btn" id="closeSuccessModal">×</button>
+            <div class="confetti" id="confetti"></div>
+            <div class="success-content">
+                <span class="success-icon">✓</span>
+                <h2 id="successTitle">Замовлення оформлено!</h2>
+                <p id="successText">Дякуємо за покупку! Ми зв'яжемося з вами найближчим часом.</p>
+                <button class="continue-btn" id="continueShoppingBtn">Продовжити покупки</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <span>✓</span> <span id="notificationText">Товар додано до кошика</span>
+    </div>
+
+    <div class="modal" id="secretUnlockModal">
+        <div class="modal-content secret-modal-content">
+            <button class="close-modal-btn" id="closeSecretModal">×</button>
+            <div class="secret-modal-body">
+                <div class="secret-icon">🔐</div>
+                <h2 id="secretTitle">🔐 Секретний товар</h2>
+                <p id="secretMessage">Введіть спеціальний код для розблокування цього товара</p>
+                <div class="secret-form">
+                    <input type="text" id="secretCodeInput" placeholder="Введіть код..." class="secret-code-input">
+                    <button id="unlockBtn" class="secret-btn">Розблокувати</button>
+                </div>
+                <div class="secret-error hidden" id="secretError"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="codeModal">
+        <div class="modal-content code-modal-content">
+            <button class="close-modal-btn" id="closeCodeModal">×</button>
+            <h2 id="codeModalTitle">🎟️ Введіть код</h2>
+            <div class="code-input-form">
+                <input type="text" id="codeInput" placeholder="Введіть ваш код..." class="code-input" maxlength="20">
+                <button id="submitCodeBtn" class="code-btn-submit">✓ Застосувати</button>
+            </div>
+            <div class="code-error hidden" id="codeError"></div>
+            <div class="code-success hidden" id="codeSuccess"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="discountModal">
+        <div class="modal-content discount-modal-content">
+            <button class="close-modal-btn" id="closeDiscountModal">×</button>
+            <div class="discount-modal-body">
+                <div class="discount-icon">🎉</div>
+                <h2 id="discountTitle">🎉 Вітаємо з 12 покупками!</h2>
+                <p id="discountMessage">У вас є 20% знижка на всі товари</p>
+                <div class="discount-form">
+                    <input type="text" id="discountCodeInput" placeholder="Код знижки: DISCOUNT20" class="discount-code-input" readonly>
+                    <button id="copyDiscountBtn" class="discount-btn">📋 Копіювати</button>
+                </div>
+                <button id="closeDiscountModalBtn" class="continue-btn">Продовжити</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="historyModal">
+        <div class="modal-content history-modal-content">
+            <button class="close-modal-btn" id="closeHistoryModal">×</button>
+            <h2 id="historyTitle">📜 Історія покупок</h2>
+            <div class="history-container">
+                <div class="history-stats">
+                    <div class="stat-item">
+                        <span class="stat-label" id="countLabel">Всього покупок:</span>
+                        <span class="stat-value" id="purchaseCountDisplay">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="totalSpentLabel">Витрачено:</span>
+                        <span class="stat-value" id="totalSpentDisplay">₴0</span>
+                    </div>
+                </div>
+
+                <div class="history-list" id="historyList">
+                    <p id="noHistoryText">У вас ще немає покупок</p>
+                </div>
+
+                <div class="secret-code-section">
+                    <h3 id="secretCodeLabel">🔐 Ваш секретний код</h3>
+                    <div class="secret-code-box">
+                        <input type="text" id="savedSecretCode" class="secret-code-display" readonly>
+                        <button id="copySecretCodeBtn" class="copy-btn">📋 Копіювати</button>
+                    </div>
+                    <p class="secret-code-note" id="secretCodeNote">Код показується тільки один раз</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
